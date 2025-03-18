@@ -12,8 +12,26 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToOne(() => Role, (role) => role.users)
-  role: Role;
+  @Column()
+  name: string;
+
+  @Column({ name: 'last_name' })
+  lastName: string;
+
+  @Column()
+  phone: string;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
+//   @ManyToOne(() => Role, (role) => role.users)
+//   role: Role;
+
+  @Column("text", {
+    array: true,
+    default: ['empleado'], 
+  })
+  role: string[];
 
   @Column({ nullable: true }) 
   token?: string;
