@@ -1,23 +1,23 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('products')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
 
   @Column()
-  price: number;
-
-  @Column()
   stock: number;
 
-  @Column({ unique: true })
-  barcode: string;
+  @Column({ nullable: true })
+  numero_serie?: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
+  barcode?: string;
+
+  @Column({ nullable: true })
   qrCode?: string;
 
 }

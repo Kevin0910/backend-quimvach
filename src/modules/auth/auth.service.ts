@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -37,17 +37,20 @@ export class AuthService {
     try {
       const { email, password } = loginUserDto;
       const user = await this.userRepository.findOne({ where: { email } });
+
       if (!user) {
-        throw new Error('User not found');
+        throw new HttpException('Usuario no encontrado', HttpStatus.UNAUTHORIZED);
       }
-      if (!await bcrypt.compare(password, user.password)) {
-        throw new Error('Invalid password');
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new HttpException('Contraseña incorrecta', HttpStatus.UNAUTHORIZED);
       }
+
       return user;
     } catch (error) {
-      throw new Error('Error logging in: ' + error.message);
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
-
   }
 
 }

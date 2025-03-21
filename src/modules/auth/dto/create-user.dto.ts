@@ -16,8 +16,8 @@ export class CreateUserDto {
     @IsString()
     lastName: string;
 
-    @IsPhoneNumber()
-    phone: string;
+    // @IsPhoneNumber()
+    // phone: string;
     
     token?: string;
 }

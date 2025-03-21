@@ -18,8 +18,8 @@ export class User {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column()
-  phone: string;
+  // @Column()
+  // phone: string;
 
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
