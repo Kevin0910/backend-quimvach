@@ -5,6 +5,8 @@ import { MaterialRequest } from './entities/material-request.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as multer from 'multer';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class MaterialRequestService {
@@ -39,8 +41,22 @@ export class MaterialRequestService {
     return this.requisitionRepository.update(Number(id), updateMaterialRequestDto);
   }
 
-  removeRequestMaterial(id: string) {
-    return this.requisitionRepository.delete(Number(id));
+  async removeRequestMaterial(id: string) {
+    const materialRequest = await this.requisitionRepository.findOne({ where: { id } });
+
+    if (!materialRequest) {
+      throw new NotFoundException(`Material request with id ${id} not found`);
+    }
+
+    if (materialRequest.pdf) {
+      const filePath = path.join(__dirname, '../../../uploads/pdfs', materialRequest.pdf);
+      
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+  
+    return this.requisitionRepository.delete(id);
   }
 
 }
