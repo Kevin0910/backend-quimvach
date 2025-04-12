@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMaterialRequestDto } from './dto/create-material-request.dto';
 import { UpdateMaterialRequestDto } from './dto/update-material-request.dto';
 import { MaterialRequest } from './entities/material-request.entity';
@@ -16,10 +16,10 @@ export class MaterialRequestService {
     private requisitionRepository: Repository<MaterialRequest>,
   ) {}
 
-  async createRequest(createMaterialRequestDto: CreateMaterialRequestDto, pdf: multer.File) {
+  async createRequest(createMaterialRequestDto: CreateMaterialRequestDto, pdf: Express.Multer.File) {
     const requisition = this.requisitionRepository.create({
       ...createMaterialRequestDto,
-      pdf: pdf.filename // Guardar solo el nombre del archivo en la BD
+      pdf: pdf.filename
     });
 
     return this.requisitionRepository.save(requisition);
@@ -37,8 +37,37 @@ export class MaterialRequestService {
     return this.requisitionRepository.find({ where: { status } });
   }
   
-  updateRequestMaterial(id: string, updateMaterialRequestDto: UpdateMaterialRequestDto) {
-    return this.requisitionRepository.update(Number(id), updateMaterialRequestDto);
+  async updateRequestMaterial(
+    id: string,
+    updateMaterialRequestDto: UpdateMaterialRequestDto,
+    pdf?: Express.Multer.File
+  ) {
+    const existingRequest = await this.requisitionRepository.findOne({ where: { id } });
+  
+    if (!existingRequest) {
+      throw new NotFoundException('No se encontró la solicitud de material.');
+    }
+  
+    try {
+      const filename = pdf ? `${Date.now()}_${pdf.originalname}` : existingRequest.pdf;
+      if (pdf) {
+        if (existingRequest.pdf) {
+
+          const oldFilePath = path.join(__dirname, '../../../uploads/pdfs', existingRequest.pdf);
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlinkSync(oldFilePath);
+          }
+        }
+        const newFilePath = path.join(__dirname, '../../../uploads/pdfs', filename);
+        fs.writeFileSync(newFilePath, pdf.buffer);
+        updateMaterialRequestDto.pdf = filename;        
+      }
+  
+      await this.requisitionRepository.update(id, updateMaterialRequestDto);
+      return await this.requisitionRepository.findOne({ where: { id } });
+    } catch (error) {
+      throw new InternalServerErrorException('Error al actualizar la solicitud de material.');
+    }
   }
 
   async removeRequestMaterial(id: string) {

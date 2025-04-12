@@ -22,6 +22,10 @@ export class ProductsService {
     return this.productRepository.find();
   }
 
+  findOneProduct(id: string) {
+    return this.productRepository.findOne({ where: { id } });
+  }
+
   async update(id: string, updateProductDto: UpdateProductDto) {
     const product = await this.productRepository.preload({
       id: id,

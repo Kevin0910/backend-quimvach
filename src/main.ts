@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { join } from 'path';
+import * as serveStatic from 'serve-static';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:4200', 'http://192.168.1.29:4200'],
+    origin: ['http://localhost:4200', 'http://192.168.1.38:4200'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 

@@ -1,10 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseUUIDPipe } from '@nestjs/common';
 import { MaterialRequestService } from './material-request.service';
 import { CreateMaterialRequestDto } from './dto/create-material-request.dto';
 import { UpdateMaterialRequestDto } from './dto/update-material-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import { File } from 'multer';
 import * as path from 'path';
 
 @Controller('material-request')
@@ -22,9 +21,7 @@ export class MaterialRequestController {
       }
     })
   }))
-  create(@UploadedFile() pdf: File, @Body() createMaterialRequestDto: CreateMaterialRequestDto) {
-    console.log('Body recibido:', createMaterialRequestDto);
-
+  create(@UploadedFile() pdf: Express.Multer.File, @Body() createMaterialRequestDto: CreateMaterialRequestDto) {
       return this.materialRequestService.createRequest(createMaterialRequestDto, pdf);
   }
 
@@ -38,14 +35,19 @@ export class MaterialRequestController {
     return this.materialRequestService.findOneRequestMaterial(id);
   }
 
-  @Get('find-all-requests-by-status/:status')
+  @Get('find-by-status/:status')
   findAllByStatus(@Param('status') status: string) {
     return this.materialRequestService.findAllRequestsByStatus(status);
   }
 
-  @Patch('update-request/:id')
-  update(@Param('id') id: string, @Body() updateMaterialRequestDto: UpdateMaterialRequestDto) {
-    return this.materialRequestService.updateRequestMaterial(id, updateMaterialRequestDto);
+  @Patch('update/:id')
+  @UseInterceptors(FileInterceptor('pdf'))
+  async updateRequestMaterial(
+    @Param('id') id: string,
+    @Body() updateMaterialRequestDto: UpdateMaterialRequestDto,
+    @UploadedFile() pdf?: Express.Multer.File,
+  ) {
+    return this.materialRequestService.updateRequestMaterial(id, updateMaterialRequestDto, pdf);
   }
 
   @Delete('remove-request/:id')

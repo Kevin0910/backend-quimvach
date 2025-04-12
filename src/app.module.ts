@@ -5,6 +5,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MaterialRequestModule } from './modules/material-request/material-request.module';
+import { VoucherModule } from './modules/voucher/voucher.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MaterialRequestModule } from './modules/material-request/material-reque
     ProductsModule,
     AuthModule,
     MaterialRequestModule,
+    VoucherModule,
   ],
   controllers: [],
   providers: [],
