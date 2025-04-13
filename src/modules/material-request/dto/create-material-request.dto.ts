@@ -5,4 +5,5 @@ export class CreateMaterialRequestDto {
   nameRequested?: string;
   pdf?: string;
   status: string;
+  comment?: string;
 }

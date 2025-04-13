@@ -24,4 +24,7 @@ export class MaterialRequest {
   @Column({ default: 'Pendiente' })
   status: string;
 
+  @Column({ nullable: true })
+  comment: string;
+
 }

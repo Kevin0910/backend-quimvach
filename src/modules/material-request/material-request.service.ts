@@ -70,6 +70,16 @@ export class MaterialRequestService {
     }
   }
 
+  async updateStatusRequestMaterial(id: string, status: string, comment: string) {
+    const materialRequest = await this.requisitionRepository.findOne({ where: { id } });
+    if (!materialRequest) {
+      throw new NotFoundException(`Material request with id ${id} not found`);
+    }
+    materialRequest.status = status;
+    materialRequest.comment = comment;
+    return this.requisitionRepository.save(materialRequest);
+  }
+
   async removeRequestMaterial(id: string) {
     const materialRequest = await this.requisitionRepository.findOne({ where: { id } });
 

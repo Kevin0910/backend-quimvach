@@ -8,5 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([MaterialRequest])],
   controllers: [MaterialRequestController],
   providers: [MaterialRequestService],
+  exports: [MaterialRequestService],
 })
 export class MaterialRequestModule {}

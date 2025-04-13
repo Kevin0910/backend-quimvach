@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MaterialRequestModule } from './modules/material-request/material-request.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
+import { PurchaseOrdersModule } from './modules/purchase-orders/purchase-orders.module';
+import { PurchasedProductsModule } from './modules/purchased-products/purchased-products.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { VoucherModule } from './modules/voucher/voucher.module';
     AuthModule,
     MaterialRequestModule,
     VoucherModule,
+    PurchaseOrdersModule,
+    PurchasedProductsModule,
   ],
   controllers: [],
   providers: [],

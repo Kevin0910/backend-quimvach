@@ -23,4 +23,9 @@ export class UpdateMaterialRequestDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
 }

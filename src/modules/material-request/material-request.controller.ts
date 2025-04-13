@@ -50,6 +50,15 @@ export class MaterialRequestController {
     return this.materialRequestService.updateRequestMaterial(id, updateMaterialRequestDto, pdf);
   }
 
+  @Patch('update-status/:id')
+  async updateStatusRequestMaterial(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body('status') status: string,
+    @Body('comment') comment: string,
+  ) {
+    return this.materialRequestService.updateStatusRequestMaterial(id, status, comment);
+  }
+
   @Delete('remove-request/:id')
   remove(@Param('id') id: string) {
     return this.materialRequestService.removeRequestMaterial(id);
