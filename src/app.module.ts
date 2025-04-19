@@ -8,6 +8,7 @@ import { MaterialRequestModule } from './modules/material-request/material-reque
 import { VoucherModule } from './modules/voucher/voucher.module';
 import { PurchaseOrdersModule } from './modules/purchase-orders/purchase-orders.module';
 import { PurchasedProductsModule } from './modules/purchased-products/purchased-products.module';
+import { MaterialRequisitionModule } from './modules/material-requisition/material-requisition.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PurchasedProductsModule } from './modules/purchased-products/purchased-
     VoucherModule,
     PurchaseOrdersModule,
     PurchasedProductsModule,
+    MaterialRequisitionModule,
   ],
   controllers: [],
   providers: [],
