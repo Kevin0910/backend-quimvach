@@ -9,13 +9,22 @@ export class UpdateMaterialRequisitionDto {
 
   @IsOptional()
   @IsString()
-  numberRequisition: string;
+  numberRequisition?: string;
   
   @IsOptional()
   @IsString()
-  departament: string;
+  departament?: string;
   
   @IsOptional()
   @IsString()
-  pdf: string;
+  pdf?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
 }
