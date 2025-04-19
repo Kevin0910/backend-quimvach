@@ -18,6 +18,12 @@ export class MaterialRequisition {
   @Column()
   pdf: string;
 
+  @Column({ default: 'Pendiente'})
+  status: string;
+
+  @Column({ nullable: true })
+  comment: string;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   dateCreated: Date;
 
