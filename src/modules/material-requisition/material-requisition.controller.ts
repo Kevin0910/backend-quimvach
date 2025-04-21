@@ -48,6 +48,15 @@ export class MaterialRequisitionController {
     return this.materialRequisitionService.updateRequisition(id, updateMaterialRequisitionDto, pdf);
   }
 
+  @Patch('reject-requisition/:id')
+  async rejectRequisitionHandler(
+    @Param('id') id: string,
+    @Body('status') status: string,
+    @Body('comment') comment: string,
+  ) {
+    return this.materialRequisitionService.rejectRequisition(id, status, comment);
+  }
+
   @Delete('delete-requisition/:id')
   async deleteRequisition(@Param('id') id: string) {
     return this.materialRequisitionService.deleteRequisition(id);

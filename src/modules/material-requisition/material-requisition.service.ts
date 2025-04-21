@@ -65,6 +65,23 @@ export class MaterialRequisitionService {
     } 
   }
 
+  async rejectRequisition(id: string, status: string, comment: string) {
+    const existingRequisition = await this.materialRequisitionRepository.findOne({ where: { id } });
+
+    if (!existingRequisition) {
+      throw new NotFoundException('No se encontró la requisición de material.');
+    }
+
+    try {
+      existingRequisition.status = status;
+      existingRequisition.comment = comment;
+      return this.materialRequisitionRepository.save(existingRequisition);
+
+    } catch (error) {
+      throw new InternalServerErrorException('Error al actualizar el estado de la requisición de material.');
+    }
+  }
+
   async deleteRequisition(id: string) {
     const existingRequisition = await this.materialRequisitionRepository.findOne({ where: { id } });
 
