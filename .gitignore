@@ -54,3 +54,6 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Ignora todos los archivos .pdf dentro de uploads/pdfs/
+uploads/pdfs/*.pdf
