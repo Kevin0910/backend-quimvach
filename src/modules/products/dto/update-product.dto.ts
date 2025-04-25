@@ -5,11 +5,12 @@ import { IsNumber, IsString } from 'class-validator';
 export class UpdateProductDto extends PartialType(CreateProductDto) {
     
     @IsString()
+    sku: string;
+    
+    @IsString()
     name: string;
     
     @IsNumber()
     stock: number;
     
-    // @IsString()
-    // numero_serie?: string;
 }
