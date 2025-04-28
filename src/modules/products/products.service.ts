@@ -22,8 +22,8 @@ export class ProductsService {
     return this.productRepository.find();
   }
 
-  findOneProduct(id: string) {
-    return this.productRepository.findOne({ where: { id } });
+  findOneProduct(sku: string) {
+    return this.productRepository.findOne({ where: { sku } });
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
