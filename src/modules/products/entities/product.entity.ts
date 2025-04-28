@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { VoucherProduct } from "src/modules/voucher-product/entities/voucher-product.entity";
+import { Voucher } from "src/modules/voucher/entities/voucher.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('products')
 export class Product {
@@ -14,5 +16,8 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @OneToMany(() => VoucherProduct, (vp) => vp.product)
+  voucherProducts: VoucherProduct[];
 
 }

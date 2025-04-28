@@ -11,39 +11,25 @@ export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
   @Post('create')
-  @UseInterceptors(FileInterceptor('pdf', {
-    storage: diskStorage({
-      destination: './uploads/pdfs',
-      filename: (req, file, callback) => {
-        const fileExt = path.extname(file.originalname);
-        const filename = `${Date.now()}${fileExt}`;
-        callback(null, filename);
-      }
-    })
-  }))
-  create(@Body() createVoucherDto: CreateVoucherDto, @UploadedFile() pdf: Express.Multer.File) {
-    return this.voucherService.create(createVoucherDto, pdf);
+  create(@Body() createVoucherDto: CreateVoucherDto) {
+    return this.voucherService.createVoucher(createVoucherDto);
   }
 
-  @Get('find-all')
+  @Get('all-vouchers')
   findAll() {
     return this.voucherService.findAll();
   }
 
-  @Get('find-status/:status')
-  findStatu(@Param('status') status: string) {
-    return this.voucherService.findStatu(status);
+  @Get(':id')
+  findOneVoucher(@Param('id') id: string) {
+    return this.voucherService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVoucherDto: UpdateVoucherDto) {
-    return this.voucherService.update(+id, updateVoucherDto);
-  }
-
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.voucherService.remove(+id);
+    return this.voucherService.deleteVoucher(id);
   }
+
 }
 
 function diskStorage(options: {

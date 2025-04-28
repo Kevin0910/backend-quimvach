@@ -1,3 +1,5 @@
+import { Product } from "src/modules/products/entities/product.entity";
+import { VoucherProduct } from "src/modules/voucher-product/entities/voucher-product.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('voucher')
@@ -21,7 +23,12 @@ export class Voucher {
   @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 
-  @Column()
-  pdf: string;  
+  @Column( { type: 'timestamp', nullable: true })
+  expirationDate: Date;
 
+  @Column()
+  pdf: string;
+
+  @OneToMany(() => VoucherProduct, (vp) => vp.voucher)
+  voucherProducts: VoucherProduct[];
 }

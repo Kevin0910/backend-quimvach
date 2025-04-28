@@ -9,6 +9,7 @@ import { VoucherModule } from './modules/voucher/voucher.module';
 import { PurchaseOrdersModule } from './modules/purchase-orders/purchase-orders.module';
 import { PurchasedProductsModule } from './modules/purchased-products/purchased-products.module';
 import { MaterialRequisitionModule } from './modules/material-requisition/material-requisition.module';
+import { VoucherProductModule } from './modules/voucher-product/voucher-product.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MaterialRequisitionModule } from './modules/material-requisition/materi
     PurchaseOrdersModule,
     PurchasedProductsModule,
     MaterialRequisitionModule,
+    VoucherProductModule,
   ],
   controllers: [],
   providers: [],

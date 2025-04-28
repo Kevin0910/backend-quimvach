@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
-import * as multer from 'multer';
 import { Product } from '../products/entities/product.entity';
+import { VoucherProduct } from '../voucher-product/entities/voucher-product.entity';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class VoucherService {
@@ -15,30 +15,92 @@ export class VoucherService {
     private voucherRepository: Repository<Voucher>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(VoucherProduct)
+    private voucherProductRepository: Repository<VoucherProduct>,
   ) {}
 
-  async create(createVoucherDto: CreateVoucherDto, pdf: Express.Multer.File) {
+  async createVoucher(data: CreateVoucherDto) {
+    const { folio, departamentRequested, nameRequested, pdf, products } = data;
+  
+    const nowDate = new Date();
+    const expirationDate = addDays(nowDate, 3);
+  
     const voucher = this.voucherRepository.create({
-      ...createVoucherDto,
-      pdf: pdf.filename
+      folio,
+      departamentRequested,
+      nameRequested,
+      pdf,
+      dateCreated: nowDate,
+      expirationDate: expirationDate,
     });
+  
+    await this.voucherRepository.save(voucher);
+  
+    for (const item of products) {
+      const product = await this.productRepository.findOne({
+        where: { id: item.id },
+      });
+  
+      if (!product) {
+        throw new NotFoundException(`Producto con ID ${item.id} no encontrado`);
+      }
+  
+      if (product.stock < item.quantity) {
+        throw new BadRequestException(`Stock insuficiente para el producto ${product.name}`);
+      }
+  
+      product.stock -= item.quantity;
+      await this.productRepository.save(product);
+  
+      const voucherProduct = this.voucherProductRepository.create({
+        voucher: voucher,
+        product: product,
+        quantity: item.quantity,
+      });
+  
+      await this.voucherProductRepository.save(voucherProduct);
+    }
+  
+    return voucher;
+  }  
 
-    return this.voucherRepository.save(voucher);
+  async findAll() {
+    return this.voucherRepository.find({
+      relations: ['voucherProducts', 'voucherProducts.product'],
+    });
   }
 
-  findAll() {
-    return this.voucherRepository.find();
+  async findOne(id: string) {
+    const voucher = await this.voucherRepository.findOne({
+      where: { id },
+      relations: ['voucherProducts', 'voucherProducts.product'],
+    });
+    if (!voucher) {
+      throw new NotFoundException(`Voucher con ID ${id} no encontrado`);
+    }
+    return voucher;
   }
 
-  findStatu(status: string) {
-    return this.voucherRepository.findOne({ where: { status } });
+  async deleteVoucher(id: string) {
+    const voucher = await this.voucherRepository.findOne({
+      where: { id },
+      relations: ['voucherProducts', 'voucherProducts.product'],
+    });
+  
+    if (!voucher) {
+      throw new NotFoundException(`Voucher con ID ${id} no encontrado`);
+    }
+  
+    for (const voucherProduct of voucher.voucherProducts) {
+      const product = voucherProduct.product;
+      product.stock += voucherProduct.quantity;
+      await this.productRepository.save(product);
+  
+      await this.voucherProductRepository.delete(voucherProduct.id);
+    }
+  
+    await this.voucherRepository.delete(id);  
+    return { message: 'Voucher eliminado y stock devuelto exitosamente' };
   }
 
-  update(id: number, updateVoucherDto: UpdateVoucherDto) {
-    return `This action updates a #${id} voucher`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} voucher`;
-  }
 }

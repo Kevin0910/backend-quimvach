@@ -1,19 +1,22 @@
-import { IsArray, IsObject, IsString } from "class-validator";
-
 export class CreateVoucherDto {
+  folio: string;
+  
+  departamentRequested: string;
+  
+  nameRequested: string;
+  
+  pdf: string;
+  
+  products: {
+    id: string;
+    quantity: number;
+  }[];
 
-    @IsString()
-    folio?: string;
+  expirationDate: Date;
+  
+  status: string;
+  
+  dateCreated: Date;
 
-    @IsString()
-    departamentRequested?: string;
-    
-    @IsString()
-    nameRequested?: string;
-
-    @IsString()
-    pdf?: string;
-
-    @IsArray()
-    @IsObject({ each: true })
-    products: { id: string, quantity: number }[];}
+}
+  
