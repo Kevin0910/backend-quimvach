@@ -16,6 +16,9 @@ export class PurchasedProduct {
   @Column()
   amount: number;
 
+  @Column({ nullable: true })
+  unit: number;
+
   @Column()
   total: number;
 

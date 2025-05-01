@@ -29,7 +29,7 @@ export class PurchaseOrdersController {
   }
 
   @Get(':id/pdf')
-async getPurchaseOrderPdf(@Param('id') id: string, @Res() res: Response) {
+  async getPurchaseOrderPdf(@Param('id') id: string, @Res() res: Response) {
   const order = await this.purchaseOrderService.findOne(id);
 
   const fonts = {

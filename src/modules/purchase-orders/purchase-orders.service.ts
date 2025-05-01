@@ -14,6 +14,10 @@ export class PurchaseOrdersService {
   ) {}
 
   async create(createPurchaseOrderDto: CreatePurchaseOrderDto): Promise<PurchaseOrder> {
+    createPurchaseOrderDto.products.forEach(product => {
+      product.total = product.amount * product.unit;
+    });
+  
     const newOrder = this.purchaseOrderRepository.create(createPurchaseOrderDto);
     return await this.purchaseOrderRepository.save(newOrder);
   }

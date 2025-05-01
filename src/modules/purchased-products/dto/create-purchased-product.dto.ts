@@ -9,7 +9,10 @@ export class CreatePurchasedProductDto {
   
   @IsNumber()
   amount: number;
-  
+
+  @IsNumber()
+  unit: number;
+
   @IsNumber()
   total: number;
 }
