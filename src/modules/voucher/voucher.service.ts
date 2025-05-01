@@ -6,6 +6,7 @@ import { Voucher } from './entities/voucher.entity';
 import { Product } from '../products/entities/product.entity';
 import { VoucherProduct } from '../voucher-product/entities/voucher-product.entity';
 import { addDays } from 'date-fns';
+import { UpdateVoucherDto } from './dto/update-voucher.dto';
 
 @Injectable()
 export class VoucherService {
@@ -70,7 +71,7 @@ export class VoucherService {
     });
   }
 
-  async findOne(id: string) {
+  async findOneVoucher(id: string) {
     const voucher = await this.voucherRepository.findOne({
       where: { id },
       relations: ['voucherProducts', 'voucherProducts.product'],
@@ -79,6 +80,15 @@ export class VoucherService {
       throw new NotFoundException(`Voucher con ID ${id} no encontrado`);
     }
     return voucher;
+  }
+
+  updateVoucher(id: string, data: UpdateVoucherDto) {
+    return this.voucherRepository.update(id, data).then((result) => {
+      if (result.affected === 0) {
+        throw new NotFoundException(`Voucher con ID ${id} no encontrado`);
+      }
+      return this.voucherRepository.findOne({ where: { id } });
+    });
   }
 
   async deleteVoucher(id: string) {

@@ -1,4 +1,5 @@
 export class CreateVoucherDto {
+  
   folio: string;
   
   departamentRequested: string;
