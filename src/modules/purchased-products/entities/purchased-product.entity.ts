@@ -13,13 +13,13 @@ export class PurchasedProduct {
   @Column()
   description: string;
   
-  @Column()
+  @Column('int')
   amount: number;
 
-  @Column({ nullable: true })
+  @Column('decimal', { precision: 10, scale: 2 })
   unit: number;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2 })
   total: number;
 
   @ManyToOne(() => PurchaseOrder, purchaseOrder => purchaseOrder.products, { onDelete: 'CASCADE' })

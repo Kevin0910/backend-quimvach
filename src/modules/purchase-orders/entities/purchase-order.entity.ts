@@ -8,28 +8,48 @@ export class PurchaseOrder {
   id: string;
 
   @Column()
-  departament: string;
+  code: string;
+
+  @Column()
+  version: string;
+
+  @Column({ name: 'issue_date' })
+  issueDate: string;
   
   @Column()
-  direction: string;
+  date: string;
 
   @Column()
-  city: string;
+  oc: string;
+
+  // QUIMVACH
+  @Column()
+  departamentQuimvach: string;
+  
+  @Column()
+  directionQuimvach: string;
+
+  @Column()
+  cityQuimvach: string;
 
   @Column() 
-  phone: string;
+  phoneQuimvach: string;
 
   @Column()
-  email: string;
+  emailQuimvach: string;
+  
+  // Proveedor
+  @Column()
+  nameSupplierCompany: string;
 
   @Column()
-  supplierName: string;
-
-  @Column()
-  departamentName: string;
+  supplierDepartament: string;
 
   @Column()
   supplierAddress: string;
+
+  @Column()
+  supplierCity: string;
 
   @Column()
   supplierPhone: string;
@@ -37,6 +57,20 @@ export class PurchaseOrder {
   @Column()
   supplierEmail: string;
 
+  // Entrega de material
+  @Column()
+  recipientName: string;
+
+  @Column()
+  recipientPosition: string;
+
+  @Column()
+  deliveryLocation: string;
+
+  @Column()
+  deliveryContact: string;
+
+  // Requisión
   @Column()
   numberRequisition: string;
 

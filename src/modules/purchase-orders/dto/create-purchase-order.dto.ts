@@ -4,46 +4,56 @@ import { CreatePurchasedProductDto } from 'src/modules/purchased-products/dto/cr
 
 export class CreatePurchaseOrderDto {
 
-  @IsString()
-  departament: string;
+  code: string;
+  
+  version: string;
 
-  @IsString()
-  direction: string;
+  issueDate: string;
+  
+  date: string;
 
-  @IsString()
-  city: string;
+  oc: string;
 
-  @IsString()
-  phone: string;
+  // QUIMVACH
+  departamentQuimvach: string;
+  
+  directionQuimvach: string;
 
-  @IsEmail()
-  email: string;
+  cityQuimvach: string;
+  
+  phoneQuimvach: string;
 
-  @IsString()
-  supplierName: string;
+  emailQuimvach: string;
+  
+  // Proveedor
+  nameSupplierCompany: string;
 
-  @IsString()
-  departamentName: string;
+  supplierDepartament: string;
 
-  @IsString()
   supplierAddress: string;
 
-  @IsString()
+  supplierCity: string;
+
   supplierPhone: string;
 
-  @IsEmail()
   supplierEmail: string;
 
-  @IsString()
+  // Entrega de material
+  recipientName: string;
+
+  recipientPosition: string;
+
+  deliveryLocation: string;
+
+  deliveryContact: string;
+
+  // Requisión
   numberRequisition: string;
 
-  @IsString()
   branchName: string;
 
-  @IsString()
   quoteNumber: string;
 
-  @IsString()
   conditionOfPayment: string;
 
   @IsArray()
