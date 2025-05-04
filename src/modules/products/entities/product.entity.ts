@@ -17,6 +17,9 @@ export class Product {
   @Column()
   stock: number;
 
+  @Column({ default: 'false' })
+  isQuarantine: boolean;
+
   @OneToMany(() => VoucherProduct, (vp) => vp.product)
   voucherProducts: VoucherProduct[];
 
