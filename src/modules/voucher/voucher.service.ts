@@ -66,9 +66,24 @@ export class VoucherService {
   }  
 
   async findAll() {
-    return this.voucherRepository.find({
+    const vouchers = await this.voucherRepository.find({
       relations: ['voucherProducts', 'voucherProducts.product'],
     });
+  
+    const now = new Date();
+  
+    for (const voucher of vouchers) {
+      const created = new Date(voucher.dateCreated);
+      const diffMs = now.getTime() - created.getTime();
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+  
+      if (diffDays >= 3 && voucher.status !== 'Atrasado') {
+        voucher.status = 'Atrasado';
+        await this.voucherRepository.save(voucher);
+      }
+    }
+  
+    return vouchers;
   }
 
   async findOneVoucher(id: string) {
