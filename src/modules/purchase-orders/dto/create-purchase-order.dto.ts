@@ -56,6 +56,18 @@ export class CreatePurchaseOrderDto {
 
   conditionOfPayment: string;
 
+  comment: string;
+
+  subtotal: number;
+
+  tax: number;
+
+  shipment?: number;
+  
+  others?: number;
+
+  total: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePurchasedProductDto)

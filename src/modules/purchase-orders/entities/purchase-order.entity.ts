@@ -83,6 +83,24 @@ export class PurchaseOrder {
   @Column()
   conditionOfPayment: string;
 
+  @Column( { nullable: true } )
+  comment: string;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  subtotal: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  tax: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  shipment: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  others: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  total: number;
+
   @OneToMany(() => PurchasedProduct, product => product.purchaseOrder, { cascade: true })
   products: PurchasedProduct[];
 

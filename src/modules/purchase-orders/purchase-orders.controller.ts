@@ -42,6 +42,12 @@ export class PurchaseOrdersController {
   };
 
   const printer = new PdfPrinter(fonts);
+  let cont: number = 1;
+  const subtotal = +order.products.reduce((sum, p) => sum + Number(p.total || 0), 0).toFixed(2);
+  const tax = +(subtotal * 0.16).toFixed(2);
+  const shipment = +Number(order.shipment ?? 0).toFixed(2);
+  const others = +Number(order.others ?? 0).toFixed(2);
+  const total = +(subtotal + tax + shipment + others).toFixed(2);
 
   const docDefinition = {
     content: [
@@ -73,16 +79,16 @@ export class PurchaseOrdersController {
                   widths: ['auto', '*'],
                   body: [
                     [
-                      { text: 'Código', bold: true, fontSize: 10 },
-                      { text: order.code, bold: true, fontSize: 10}
+                      { text: 'Código', bold: true, fontSize: 9 },
+                      { text: order.code, bold: true, fontSize: 9}
                     ],
                     [
-                      { text: 'Versión', bold: true, fontSize: 10 },
-                      { text: order.version, bold: true, fontSize: 10 }
+                      { text: 'Versión', bold: true, fontSize: 9 },
+                      { text: order.version, bold: true, fontSize: 9 }
                     ],
                     [
-                      { text: 'Fecha de emisión', bold: true, fontSize: 10 },
-                      { text: order.issueDate, bold: true, fontSize: 10 }
+                      { text: 'Fecha de emisión', bold: true, fontSize: 8 },
+                      { text: order.issueDate, bold: true, fontSize: 9 }
                     ]
                   ]
                 },
@@ -96,83 +102,117 @@ export class PurchaseOrdersController {
         layout: 'lightHorizontalLines'
       },  
       {
-        margin: [2, 5, 2, 5],
-        table: {
-          widths: ['25%', '40%'],
-          body: [
-            [
-              {
-                text: 'QUIMVACH',
-                bold: true,
-                fontSize: 10,
-                alignment: 'center',
-                colSpan: 2
-              },
-              {},
-            ],
-            [
-              { text: 'Contacto o Departamento', bold: true, fontSize: 10 },
-              { text: order.departamentQuimvach, bold: true, fontSize: 10 },
-            ],
-            [
-              { text: 'Dirección', bold: true, fontSize: 10 },
-              { text: order.directionQuimvach, bold: true, fontSize: 10 },
-            ],
-            [
-              { text: 'Ciudad, Estado', bold: true, fontSize: 10 },
-              { text: order.cityQuimvach, bold: true, fontSize: 10 },
-            ],
-            [
-              { text: 'Teléfono', bold: true, fontSize: 10 },
-              { text: order.phoneQuimvach, bold: true, fontSize: 10 },
-            ],
-            [
-              { text: 'Email', bold: true, fontSize: 10 },
-              { text: order.emailQuimvach, bold: true, fontSize: 10 },
-            ],
-          ]
-        },
+        columns: [
+          {
+            width: '70%',
+            margin: [2, 5, 2, 0],
+            table: {
+              body: [
+                [
+                  {
+                    text: 'QUIMVACH',
+                    bold: true,
+                    fontSize: 8,
+                    alignment: 'center',
+                    colSpan: 2,
+                    fillColor: '#e0e0e0'
+                  },
+                  {},
+                ],
+                [
+                  { text: 'Contacto o Departamento:', bold: true, fontSize: 8 },
+                  { text: order.departamentQuimvach, bold: true, fontSize: 8 },
+                ],
+                [
+                  { text: 'Dirección:', bold: true, fontSize: 8 },
+                  { text: order.directionQuimvach, bold: true, fontSize: 8 },
+                ],
+                [
+                  { text: 'Ciudad, Estado:', bold: true, fontSize: 8 },
+                  { text: order.cityQuimvach, bold: true, fontSize: 8 },
+                ],
+                [
+                  { text: 'Teléfono:', bold: true, fontSize: 8 },
+                  { text: order.phoneQuimvach, bold: true, fontSize: 8 },
+                ],
+                [
+                  { text: 'e-mail:', bold: true, fontSize: 8 },
+                  { text: order.emailQuimvach, bold: true, fontSize: 8 },
+                ],
+              ]
+            },
+          },
+          {
+            width: '30%',
+            margin: [2, 5, 2, 5],
+            table: {
+              widths: ['30%', '70%'],
+              body: [
+                [
+                  {
+                    text: 'Datos OC',
+                    bold: true,
+                    fontSize: 8,
+                    alignment: 'center',
+                    colSpan: 2,
+                    fillColor: '#e0e0e0'
+                  }, {}
+                ],
+                [
+                  { text: 'OC#:', bold: true, fontSize: 8 },
+                  { text: order.oc, bold: true, fontSize: 8 }
+                ],
+                [
+                  { text: 'Fecha:', bold: true, fontSize: 8 },
+                  { text: order.date, bold: true, fontSize: 8 }
+                ],
+              ],
+            },
+          }
+        ],
       },
+      
       {
         columns: [
           {
             width: '50%',
             margin: [2, 5, 2, 5],
             table: {
-              widths: ['25%', '75%'],
+              widths: ['40%', '60%'],
               body: [
                 [
                   {
                     text: 'Proveedor',
                     bold: true,
-                    fontSize: 10,
+                    fontSize: 8,
                     alignment: 'center',
-                    colSpan: 2
+                    colSpan: 2,
+                    fillColor: '#e0e0e0'
                   }, {}
                 ],
                 [
-                  { text: 'Nombre de la empresa', bold: true, fontSize: 10 },
-                  { text: order.nameSupplierCompany, bold: true, fontSize: 10 }
+                  { text: 'Nombre de empresa:', bold: true, fontSize: 8 },
+                  { text: order.nameSupplierCompany, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Contacto o Departamento', bold: true, fontSize: 10 },
-                  { text: order.supplierDepartament, bold: true, fontSize: 10 }
+                  { text: 'Contacto o Departamento:', bold: true, fontSize: 8 },
+                  { text: order.supplierDepartament, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Dirección', bold: true, fontSize: 10 },
-                  { text: order.supplierAddress, bold: true, fontSize: 10 }
+                  { text: 'Dirección:', bold: true, fontSize: 8 },
+                  { text: order.supplierAddress, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Ciudad, Estado', bold: true, fontSize: 10 },
-                  { text: order.supplierCity, bold: true, fontSize: 10 }
+                  { text: 'Ciudad, Estado, CP:', bold: true, fontSize: 8 },
+                  { text: order.supplierCity, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Teléfono', bold: true, fontSize: 10 },
-                  { text: order.supplierPhone, bold: true, fontSize: 10 }
+                  { text: 'Teléfono:', bold: true, fontSize: 8 },
+                  { text: order.supplierPhone, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Email', bold: true, fontSize: 10 },
-                  { text: order.supplierEmail, bold: true, fontSize: 10 }
+                  { text: 'E-mail:', bold: true, fontSize: 8 },
+                  { text: order.supplierEmail, bold: true, fontSize: 8 }
                 ]
               ]
             },
@@ -188,26 +228,27 @@ export class PurchaseOrdersController {
                   {
                     text: 'Entrega de Material',
                     bold: true,
-                    fontSize: 10,
+                    fontSize: 8,
                     alignment: 'center',
-                    colSpan: 2
+                    colSpan: 2,
+                    fillColor: '#e0e0e0'
                   }, {}
                 ],
                 [
-                  { text: 'Nombre', bold: true, fontSize: 10 },
-                  { text: order.recipientName, bold: true, fontSize: 10 }
+                  { text: 'Nombre:', bold: true, fontSize: 8 },
+                  { text: order.recipientName, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Puesto', bold: true, fontSize: 10 },
-                  { text: order.recipientPosition, bold: true, fontSize: 10 }
+                  { text: 'Puesto:', bold: true, fontSize: 8 },
+                  { text: order.recipientPosition, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Lugar', bold: true, fontSize: 10 },
-                  { text: order.deliveryLocation, bold: true, fontSize: 10 }
+                  { text: 'Lugar:', bold: true, fontSize: 8 },
+                  { text: order.deliveryLocation, bold: true, fontSize: 8 }
                 ],
                 [
-                  { text: 'Contacto', bold: true, fontSize: 10 },
-                  { text: order.deliveryContact, bold: true, fontSize: 10 }
+                  { text: 'Telefono:', bold: true, fontSize: 8 },
+                  { text: order.deliveryContact, bold: true, fontSize: 8 }
                 ],
               ]
             },
@@ -215,52 +256,95 @@ export class PurchaseOrdersController {
           }
         ]
       },
-
       {
-        margin: [5, 10, 5, 10],
         table: {
           widths: ['25%', '25%', '25%', '25%'],
           body: [
             [
-              { text: 'No de Requisión', bold: true, fontSize: 10 },
-              { text: 'Sucursal', bold: true, fontSize: 10 },
-              { text: 'No de Cotización', bold: true, fontSize: 10 },
-              { text: 'Condiciones de Pago', bold: true, fontSize: 10 }
+              { text: 'No de Requisión', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'Sucursal', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'No. de Cotización', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'Condiciones de Pago', bold: true, fontSize: 8, fillColor: '#e0e0e0' }
             ],
             [
-              { text: order.numberRequisition, bold: true, fontSize: 10 },
-              { text: order.branchName, bold: true, fontSize: 10 },
-              { text: order.quoteNumber, bold: true, fontSize: 10 },
-              { text: order.conditionOfPayment, bold: true, fontSize: 10 }
+              { text: order.numberRequisition, bold: true, fontSize: 8 },
+              { text: order.branchName, bold: true, fontSize: 8 },
+              { text: order.quoteNumber, bold: true, fontSize: 8 },
+              { text: order.conditionOfPayment, bold: true, fontSize: 8 }
             ]
           ]
         },
         // layout: 'lightHorizontalLines'
       },
-
-      { text: 'Productos Solicitados:', style: 'subheader' },
-
       {
+        margin: [0, 5, 0, 0],
         table: {
-          widths: ['*', '*', 'auto', '*', '*'],
+          widths: ['100%'],
           body: [
-            ['Nombre producto', 'Descripción', 'Cantidad', 'P/U', 'Total'],
+            [
+              { text: 'Comentarios o instrucciones especiales', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+            ],
+            [
+              { text: order.comment, fontSize: 8 },
+            ]
+          ]
+        },
+      },
+      {
+        margin: [0, 5, 0, 0],
+        table: {
+          widths: ['14%', '40%', '8%', '18%', '20%'],
+          body: [
+            [
+              { text: 'ARTICULO #', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'DESCRIPCIÓN', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'CANT', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'P/U', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'TOTAL', bold: true, fontSize: 8, fillColor: '#e0e0e0' }
+            ],
             ...order.products.map(p => [
-              p.name,
-              p.description,
-              p.amount.toString(),
-              `$ ${p.unit}`,
-              `$ ${p.total}`
-            ])
+              { text: cont++, bold: true, fontSize: 8, },
+              { text: p.description, bold: true, fontSize: 8, },
+              { text: p.amount.toString(), bold: true, fontSize: 8, },
+              { text: `$ ${p.unit}`, bold: true, fontSize: 8, },
+              { text: `$ ${p.total}`, bold: true, fontSize: 8, }
+            ]),
+            [
+              { text: '', colSpan: 3, border: [false, false, false, false] }, {}, {},
+              { text: 'SUBTOTAL', fontSize: 8, bold: true },
+              { text: `$ ${subtotal.toFixed(2)}`, fontSize: 8, bold: true }
+            ],
+            [
+              { text: '', colSpan: 3, border: [false, false, false, false] }, {}, {},
+              { text: 'IMPUESTO (16%)', fontSize: 8, bold: true },
+              { text: `$ ${tax.toFixed(2)}`, fontSize: 8, bold: true }
+            ],
+            [
+              { text: '', colSpan: 3, border: [false, false, false, false] }, {}, {},
+              { text: 'ENVÍO', fontSize: 8, bold: true },
+              { text: `$ ${shipment.toFixed(2)}`, fontSize: 8, bold: true }
+            ],
+            [
+              { text: '', colSpan: 3, border: [false, false, false, false] }, {}, {},
+              { text: 'OTRO', fontSize: 8, bold: true },
+              { text: `$ ${others.toFixed(2)}`, fontSize: 8, bold: true }
+            ],
+            [
+              { text: '', colSpan: 3, border: [false, false, false, false] }, {}, {},
+              { text: 'TOTAL', fontSize: 8, bold: true },
+              { text: `$ ${total.toFixed(2)}`, fontSize: 8, bold: true }
+            ]
           ]
         }
       },
-
       {
-        text: `\nCondiciones de Pago: ${order.conditionOfPayment}`,
-        style: 'footer',
-        margin: [0, 20, 0, 0]
+        text: 'Si usted tiene alguna pregunta sobre esta orden de compra, por favor, póngase en contacto en los correos arriba mencionados.',
+        fontSize: 8,
+        margin: [0, 5, 0, 0],
+        alignment: 'justify',
+        bold: true
       }
+      
     ],
     styles: {
       header: { fontSize: 20, bold: true },
