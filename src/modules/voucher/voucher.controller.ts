@@ -11,8 +11,21 @@ export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
   @Post('create')
-  create(@Body() createVoucherDto: CreateVoucherDto) {
-    return this.voucherService.createVoucher(createVoucherDto);
+  @UseInterceptors(FileInterceptor('pdf', {
+    storage: diskStorage({
+      destination: './uploads/pdfs',
+      filename: (req, file, callback) => {
+        const fileExt = path.extname(file.originalname);
+        const filename = `${Date.now()}${fileExt}`;
+        callback(null, filename);
+      }
+    })
+  }))
+  create(
+    @Body() createVoucherDto: CreateVoucherDto,
+    @UploadedFile() pdf: Express.Multer.File,
+  ) {
+    return this.voucherService.createVoucher(createVoucherDto, pdf);
   }
 
   @Get('all-vouchers')

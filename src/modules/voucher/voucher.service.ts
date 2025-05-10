@@ -20,17 +20,21 @@ export class VoucherService {
     private voucherProductRepository: Repository<VoucherProduct>,
   ) {}
 
-  async createVoucher(data: CreateVoucherDto) {
-    const { folio, departamentRequested, nameRequested, pdf, products } = data;
-  
+  async createVoucher(data: CreateVoucherDto, pdf: Express.Multer.File) {
+    let products: { id: string; quantity: number }[];
+
+    try {
+      products = typeof data.products === 'string' ? JSON.parse(data.products) : data.products;
+    } catch (error) {
+      throw new BadRequestException('Formato de productos inválido');
+    }
+
     const nowDate = new Date();
     const expirationDate = addDays(nowDate, 3);
   
     const voucher = this.voucherRepository.create({
-      folio,
-      departamentRequested,
-      nameRequested,
-      pdf,
+      ...data,
+      pdf: pdf.filename,
       dateCreated: nowDate,
       expirationDate: expirationDate,
     });
@@ -41,22 +45,28 @@ export class VoucherService {
       const product = await this.productRepository.findOne({
         where: { id: item.id },
       });
+
+      const quantity = Number(item.quantity);
+
+      if (isNaN(quantity) || quantity <= 0) {
+        throw new BadRequestException(`Cantidad inválida para el producto ${item.id}`);
+      }
   
       if (!product) {
         throw new NotFoundException(`Producto con ID ${item.id} no encontrado`);
       }
   
-      if (product.stock < item.quantity) {
+      if (product.stock < quantity) {
         throw new BadRequestException(`Stock insuficiente para el producto ${product.name}`);
       }
   
-      product.stock -= item.quantity;
+      product.stock -= quantity;
       await this.productRepository.save(product);
   
       const voucherProduct = this.voucherProductRepository.create({
-        voucher: voucher,
-        product: product,
-        quantity: item.quantity,
+        voucher,
+        product,
+        quantity,
       });
   
       await this.voucherProductRepository.save(voucherProduct);
