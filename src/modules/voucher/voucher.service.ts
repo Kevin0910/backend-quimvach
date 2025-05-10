@@ -116,6 +116,27 @@ export class VoucherService {
     });
   }
 
+  async confirmDelivery(id: string, voucherProducts: any[]) {
+    const voucher = await this.voucherRepository.findOne({ where: { id }, relations: ['voucherProducts', 'voucherProducts.product'] });
+
+    if (!voucher) {
+      throw new NotFoundException('Voucher no encontrado');
+    }
+
+    voucher.status = 'Entregado';
+    await this.voucherRepository.save(voucher);
+
+    for (const vp of voucherProducts) {
+      const product = await this.productRepository.findOne({ where: { id: vp.product.id } });
+      if (product) {
+        product.stock += vp.quantity;
+        await this.productRepository.save(product);
+      }
+    }
+
+    return 
+  }
+
   async deleteVoucher(id: string) {
     const voucher = await this.voucherRepository.findOne({
       where: { id },

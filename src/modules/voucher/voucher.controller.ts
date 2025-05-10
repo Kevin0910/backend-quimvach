@@ -43,6 +43,14 @@ export class VoucherController {
     return this.voucherService.updateVoucher(id, updateVoucherDto);
   }
 
+  @Patch('confirm-delivery/:id')
+  async confirmDelivery(
+    @Param('id') id: string,
+    @Body() body: { voucherProducts: any[] }
+  ) {
+    return this.voucherService.confirmDelivery(id, body.voucherProducts);
+  }
+
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.voucherService.deleteVoucher(id);
