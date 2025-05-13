@@ -87,7 +87,7 @@ export class VoucherService {
       const diffMs = now.getTime() - created.getTime();
       const diffDays = diffMs / (1000 * 60 * 60 * 24);
   
-      if (diffDays >= 3 && voucher.status !== 'Atrasado') {
+      if (diffDays >= 3 && voucher.status === 'Pendiente') {
         voucher.status = 'Atrasado';
         await this.voucherRepository.save(voucher);
       }
@@ -134,7 +134,7 @@ export class VoucherService {
       }
     }
 
-    return 
+    return await this.voucherRepository.findOne({ where: { id } });
   }
 
   async deleteVoucher(id: string) {
