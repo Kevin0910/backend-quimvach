@@ -13,6 +13,9 @@ export class PurchaseOrder {
   @Column()
   version: string;
 
+  @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  dateCreated: Date;
+
   @Column({ name: 'issue_date' })
   issueDate: string;
   
