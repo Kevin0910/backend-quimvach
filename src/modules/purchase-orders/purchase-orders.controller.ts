@@ -297,14 +297,14 @@ export class PurchaseOrdersController {
           body: [
             [
               { text: 'ARTICULO #', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
-              { text: 'DESCRIPCIÓN', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
+              { text: 'NOMBRE DE PRODUCTO', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
               { text: 'CANT', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
               { text: 'P/U', bold: true, fontSize: 8, fillColor: '#e0e0e0' },
               { text: 'TOTAL', bold: true, fontSize: 8, fillColor: '#e0e0e0' }
             ],
             ...order.products.map(p => [
               { text: cont++, bold: true, fontSize: 8, },
-              { text: p.description, bold: true, fontSize: 8, },
+              { text: p.name, bold: true, fontSize: 8, },
               { text: p.amount.toString(), bold: true, fontSize: 8, },
               { text: `$ ${p.unit}`, bold: true, fontSize: 8, },
               { text: `$ ${p.total}`, bold: true, fontSize: 8, }
