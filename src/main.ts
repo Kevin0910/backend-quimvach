@@ -2,11 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import serveStatic from 'serve-static';
+import { setDefaultResultOrder } from 'dns';
+setDefaultResultOrder('ipv4first');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:4200', 'http://192.168.1.38:4200'],
+    origin: [
+      'http://localhost:4200',
+      'https://forestgreen-rhinoceros-223201.hostingersite.com'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 
