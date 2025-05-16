@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import serveStatic from 'serve-static';
-import { setDefaultResultOrder } from 'dns';
+import { setDefaultResultOrder } from 'node:dns';
 setDefaultResultOrder('ipv4first');
 
 async function bootstrap() {

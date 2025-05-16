@@ -19,8 +19,7 @@ import { VoucherProductModule } from './modules/voucher-product/voucher-product.
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      ssl: true,
-      extra: { rejectUnauthorized: false },
+      ssl: { rejectUnauthorized: false },
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV !== 'production',
     }),
