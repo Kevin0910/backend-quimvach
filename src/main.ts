@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use('/uploads/pdfs', serveStatic(join(__dirname, '..', 'uploads', 'pdfs')));
 
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 5432);
 
 }
 bootstrap();
