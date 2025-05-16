@@ -18,12 +18,16 @@ import { VoucherProductModule } from './modules/voucher-product/voucher-product.
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: ["src/bar/entities/**/*.ts"],
       autoLoadEntities: true,
       synchronize: true,
       extra: {
-        family: 4,
+        rejectUnauthorized: false,
       },
     }),
     RolesModule,
