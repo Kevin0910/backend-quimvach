@@ -26,6 +26,9 @@ import { VoucherProductModule } from './modules/voucher-product/voucher-product.
       entities: ["src/bar/entities/**/*.ts"],
       autoLoadEntities: true,
       synchronize: true,
+      extra: {
+        family: 4,
+      },
     }),
     RolesModule,
     ProductsModule,
