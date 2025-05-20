@@ -12,6 +12,7 @@ async function bootstrap() {
       'http://localhost:4200',
       'https://forestgreen-rhinoceros-223201.hostingersite.com'
     ],
+    Credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 
