@@ -74,15 +74,27 @@ export class AuthService {
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.password && updateUserDto.password.trim() !== '') {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    } else {
+      delete updateUserDto.password;
+    }
+
     const user = await this.userRepository.preload({
       id: id,
       ...updateUserDto,
-      role: updateUserDto.role ? [updateUserDto.role] : undefined,
+      role: updateUserDto.role
+      ? Array.isArray(updateUserDto.role)
+        ? updateUserDto.role
+        : [updateUserDto.role]
+      : undefined,
     });
+
     if (!user) {
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
-    return this.userRepository.save(user);
+
+    return await this.userRepository.save(user);
   }
 
   async remove(id: string): Promise<void> {
